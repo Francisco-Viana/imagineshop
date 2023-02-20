@@ -17,7 +17,7 @@ app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
   const user = { name, email, password };
   const userService = new UserService();
-  D;
+
   await userService.create(user);
 });
 return res.status(201).json(user);
@@ -47,6 +47,17 @@ app.put("/users/:id", async (req, res) => {
   if (findUser) {
     await userService.update(id, user);
     return res.status(200).json({ message: "Usuário atualizado com sucesso!" });
+  }
+  return res.status(404).json({ message: "Usuário não encontrado" });
+});
+
+app.delete("/users/:id", async (req, res) => {
+  const id = req.params;
+  const userService = new UserService();
+  const user = await userService.findById(id);
+  if (user) {
+    await userService.delete(id);
+    return res.status(200).json({ message: "Usuário excluído com sucesso!" });
   }
   return res.status(404).json({ message: "Usuário não encontrado" });
 });
